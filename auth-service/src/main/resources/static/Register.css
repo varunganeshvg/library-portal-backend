@@ -1,0 +1,33 @@
+body{
+background-image: url("/regimage.jpg");
+background-repeat: no-repeat;
+background-position:center;
+background-attachment:fixed;
+background-size: cover;  
+}
+h1{
+
+font-size:50px;
+text-align: center;
+}
+
+.container{
+
+    max-width:300px;
+    margin: 100px 750px 100px 750px; ; 
+    padding:30px 40px 30px 40px;     
+    background-color: rgba(255, 255, 255, 0.9); 
+    border: 5px double #333;            
+    border-radius: 50px;     
+
+}
+
+.rname,
+.rpass,
+.remail,
+.rrole,
+.subres{
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
