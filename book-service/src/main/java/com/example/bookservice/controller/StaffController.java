@@ -13,9 +13,14 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 import org.springframework.web.client.RestTemplate;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @RestController
 @RequestMapping("/api/staff")
 public class StaffController {
+	
+	@Value("${AUTH_SERVICE_URL}")
+	private String authServiceUrl;
 
     @Autowired
     private StaffDetailsRepository staffDetailsRepository;
@@ -45,7 +50,7 @@ public class StaffController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = "http://localhost:8080/api/auth/user-id?email=" + staff.getEmail();
+        String url = authServiceUrl + "/api/auth/user-id?email=" + staff.getEmail();
 
         Long authUserId = restTemplate.getForObject(url, Long.class);
 
@@ -54,10 +59,8 @@ public class StaffController {
         }
 
         staff.setUserId(authUserId);
-
         return staffDetailsRepository.save(staff);
     }
-
     @GetMapping("/list")
     public List<StaffDetails> getAllStaff() {
         return staffDetailsRepository.findAll();
