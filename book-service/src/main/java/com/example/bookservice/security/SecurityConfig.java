@@ -30,14 +30,18 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
             	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            	    
             	    .requestMatchers("/api/books/ping").permitAll()
 
-            	    // Admin-only APIs
-            	    .requestMatchers("/api/admin/**").hasRole("ADMIN")
-            	    .requestMatchers("/api/staff/**").hasAnyRole("ADMIN", "STAFF")
-            	    .requestMatchers("/api/student/**").hasRole("STUDENT")
-            	    // Everything else needs login
+            	    // ADMIN
+            	    .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+
+            	    // STAFF + ADMIN
+            	    .requestMatchers("/api/staff/**")
+            	        .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
+
+            	    // STUDENT
+            	    .requestMatchers("/api/student/**").hasAuthority("ROLE_STUDENT")
+
             	    .anyRequest().authenticated()
             	)
 
