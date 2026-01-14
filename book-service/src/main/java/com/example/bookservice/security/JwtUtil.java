@@ -6,19 +6,26 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.stereotype.Component;
 
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Component
 public class JwtUtil {
+	
+	@Value("${jwt.secret}")
+	private String secret;
+
 
     // 🔴 IMPORTANT: this must be EXACTLY the same as in auth-service
-    private static final String SECRET_KEY = "MySuperSecretKeyForJwtDontShareveryconfidental";
+    //private static final String SECRET_KEY = "MySuperSecretKeyForJwtDontShareveryconfidental";
 
     // Build a signing key object from the secret string
-    private Key getSignKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-    }
+	private Key getSignKey() {
+	    return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+	}
 
     // Extract email (subject) from token
     public String extractEmail(String token) {
