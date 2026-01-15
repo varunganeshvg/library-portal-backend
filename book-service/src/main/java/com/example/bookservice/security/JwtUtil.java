@@ -11,6 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import org.springframework.beans.factory.annotation.Value;
 
+import jakarta.annotation.PostConstruct;
+
+
 
 @Component
 public class JwtUtil {
@@ -67,4 +70,9 @@ public class JwtUtil {
                 .parseClaimsJws(rawToken)
                 .getBody();
     }
+    @PostConstruct
+    public void debugSecret() {
+        System.out.println("JWT SECRET LENGTH = " + (secret == null ? "NULL" : secret.length()));
+    }
+
 }
