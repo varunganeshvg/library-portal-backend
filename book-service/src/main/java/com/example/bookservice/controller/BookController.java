@@ -95,7 +95,10 @@ public class BookController {
     {
     	return bookRepository.findByAuthorContainingIgnoreCase(query);
     }
-    
+    @GetMapping("/debug")
+    public Object debug(Authentication authentication) {
+        return authentication;
+    }
     @GetMapping("/search/category")
     public List<Book> searchByCategory(@RequestParam String query)
     {

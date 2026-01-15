@@ -31,6 +31,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
             	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             	    .requestMatchers("/api/books/ping").permitAll()
+            	    .requestMatchers("/api/books/debug").permitAll()
 
             	    // ADMIN
             	    .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
