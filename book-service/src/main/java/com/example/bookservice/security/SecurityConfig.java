@@ -33,6 +33,7 @@ public class SecurityConfig {
                 // PUBLIC
                 .requestMatchers("/api/books/ping").permitAll()
                 .requestMatchers("/api/books/debug").permitAll() // TEMP
+                .requestMatchers("/api/staff/profile").permitAll()
 
                 // BOOK APIs
                 .requestMatchers("/api/books/**")
