@@ -8,7 +8,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.http.HttpMethod;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -28,24 +27,18 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                // PUBLIC
-                .requestMatchers("/api/books/ping").permitAll()
-                .requestMatchers("/api/books/debug").permitAll() // TEMP
-                .requestMatchers("/api/staff/profile").permitAll()
-
-                // BOOK APIs
-                .requestMatchers("/api/books/**")
-                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
-
-                // STAFF
-                .requestMatchers("/api/staff/**")
-                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
-
+                // CORS preflight
+            		// PUBLIC
+            		.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            		.requestMatchers("/api/books/ping").permitAll()
+            		.requestMatchers("/api/books/debug").permitAll()
                 // ADMIN
                 .requestMatchers("/api/admin/**")
                     .hasAuthority("ROLE_ADMIN")
+
+                // STAFF + ADMIN
+                .requestMatchers("/api/staff/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
 
                 // STUDENT
                 .requestMatchers("/api/student/**")
