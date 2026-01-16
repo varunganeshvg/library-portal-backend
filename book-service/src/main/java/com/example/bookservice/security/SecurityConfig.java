@@ -29,27 +29,33 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            	    .requestMatchers("/api/books/ping").permitAll()
-            	    .requestMatchers("/api/books/debug").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-            	    // ADMIN
-            	    .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                // PUBLIC
+                .requestMatchers("/api/books/ping").permitAll()
+                .requestMatchers("/api/books/debug").permitAll() // TEMP
 
-            	    // STAFF + ADMIN
-            	    .requestMatchers("/api/staff/**")
-            	        .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
+                // BOOK APIs (🔥 THIS FIXES IT 🔥)
+                .requestMatchers("/api/books/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
 
-            	    // STUDENT
-            	    .requestMatchers("/api/student/**").hasAuthority("ROLE_STUDENT")
+                // ADMIN
+                .requestMatchers("/api/admin/**")
+                    .hasAuthority("ROLE_ADMIN")
 
-            	    .anyRequest().authenticated()
-            	)
+                // STAFF
+                .requestMatchers("/api/staff/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
 
+                // STUDENT
+                .requestMatchers("/api/student/**")
+                    .hasAuthority("ROLE_STUDENT")
+
+                .anyRequest().authenticated()
+            )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 }
-
 
