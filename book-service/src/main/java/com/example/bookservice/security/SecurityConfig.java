@@ -9,7 +9,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.http.HttpMethod;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -35,17 +34,17 @@ public class SecurityConfig {
                 .requestMatchers("/api/books/ping").permitAll()
                 .requestMatchers("/api/books/debug").permitAll() // TEMP
 
-                // BOOK APIs (🔥 THIS FIXES IT 🔥)
+                // BOOK APIs
                 .requestMatchers("/api/books/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
+
+                // STAFF
+                .requestMatchers("/api/staff/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
 
                 // ADMIN
                 .requestMatchers("/api/admin/**")
                     .hasAuthority("ROLE_ADMIN")
-
-                // STAFF
-                .requestMatchers("/api/staff/**")
-                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
 
                 // STUDENT
                 .requestMatchers("/api/student/**")
@@ -58,4 +57,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
