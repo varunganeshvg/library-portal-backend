@@ -34,7 +34,13 @@ public class JwtService {
     }
 
     // ✅ Create token
+ // ✅ Create token - FIXED
     public String generateToken(Long userId, String email, String role) {
+        // 🔥 ADD THESE 3 LINES - FIX ROLE PREFIX
+        if (!role.startsWith("ROLE_")) {
+            role = "ROLE_" + role.toUpperCase();
+        }
+        
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         claims.put("userId", userId);   
