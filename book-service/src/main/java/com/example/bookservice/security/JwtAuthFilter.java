@@ -4,8 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-//import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-//@Order(1)
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -29,13 +26,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
-
-        System.out.println(">>> JwtAuthFilter HIT");
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-        System.out.println(">>> Authorization header = " + authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -49,33 +43,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 🔥 Extract data from JWT
-     // 🔥 FIXED Extract data from JWT
+        // 🔹 Extract data from JWT
         String email = jwtUtil.extractEmail(token);
-        String rawRole  = jwtUtil.extractRole(token);
-        String role = rawRole.startsWith("ROLE_") ? rawRole : "ROLE_" + rawRole.toUpperCase();
-        Long userId  = jwtUtil.extractUserId(token);
+        String role  = jwtUtil.extractRole(token); // ROLE_ADMIN / ROLE_STAFF / ROLE_STUDENT
 
-        System.out.println(">>> Email = " + email);
-        System.out.println(">>> Role FIXED = " + role);
-        System.out.println(">>> UserId = " + userId);
-
-        SimpleGrantedAuthority authority =
-                new SimpleGrantedAuthority(role);
+        // 🔹 THIS IS THE MOST IMPORTANT PART
+        List<SimpleGrantedAuthority> authorities =
+                List.of(new SimpleGrantedAuthority(role));
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                         email,
                         null,
-                        List.of(authority)
+                        authorities
                 );
 
-        // 🔥 STORE userId INSIDE AUTHENTICATION
-        authentication.setDetails(userId);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println(">>> Authentication SET with userId");
 
         filterChain.doFilter(request, response);
     }
 }
+
