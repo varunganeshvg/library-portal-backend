@@ -17,10 +17,12 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Allow frontend origin
-        config.setAllowedOrigins(List.of(
-                "http://127.0.0.1:5500",
-                "http://localhost:5500"
-        ));
+        config.setAllowedOriginPatterns(List.of(
+        	    "http://localhost:5500",
+        	    "http://127.0.0.1:5500",
+        	    "https://*.netlify.app"
+        	));
+
 
         // Allow headers
         config.setAllowedHeaders(List.of(
