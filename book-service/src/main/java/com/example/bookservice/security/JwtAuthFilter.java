@@ -50,12 +50,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         // 🔥 Extract data from JWT
+     // 🔥 FIXED Extract data from JWT
         String email = jwtUtil.extractEmail(token);
-        String role  = jwtUtil.extractRole(token);
-        Long userId  = jwtUtil.extractUserId(token);   // ✅ NEW
+        String rawRole  = jwtUtil.extractRole(token);
+        String role = rawRole.startsWith("ROLE_") ? rawRole : "ROLE_" + rawRole.toUpperCase();
+        Long userId  = jwtUtil.extractUserId(token);
 
         System.out.println(">>> Email = " + email);
-        System.out.println(">>> Role  = " + role);
+        System.out.println(">>> Role FIXED = " + role);
         System.out.println(">>> UserId = " + userId);
 
         SimpleGrantedAuthority authority =
